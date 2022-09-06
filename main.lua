@@ -17,9 +17,15 @@ WINDOW_HEIGHT = 720
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
+--	Requires
+push = require 'push'
+
 --	Bootstrap of the game. Initializes the game
 function love.load()
-	love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, {
+	--	Setting filter to point blank
+	love.graphics.setDefaultFilter('nearest', 'nearest')
+	--	Setting the retro window
+	push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
 		fullscreen = false,
 		resizable = false,
 		vsync = true
@@ -34,9 +40,15 @@ end
 
 --	Function that deals with all the drawing 
 function love.draw()
+	--	Push must be aplly, like a state machine 
+	push:apply('start')
+	
 	love.graphics.printf("Hello Pong!",				--	text to render
 						 0,							--	starting "x"
-						 WINDOW_HEIGHT / 2 - 6,		--	starting "y"
-						 WINDOW_WIDTH,				--	number of pixels to center within
+						 VIRTUAL_HEIGHT / 2 - 6,	--	starting "y"
+						 VIRTUAL_WIDTH,				--	number of pixels to center within
 						 'center')					--	alignment 
+
+	--	Push must be apply at the end, like a change on a state machine
+	 push:apply('end')
 end

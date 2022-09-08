@@ -29,13 +29,16 @@ function love.load()
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	--	setting the new font
 	smallfont = love.graphics.newFont('font.ttf', 8)
-	love.graphics.setFont(smallfont)
+	scorefont = love.graphics.newFont('font.ttf', 12)
 	--	setting the virtualization of the window, to make it look like old SNES
 	push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
 		fullscreen = false,
 		resizable = false,
 		vsync = true
 	})
+	--	setting up the score of both players
+	player1score = 0
+	player2score = 0
 end
 --	function to verify if the 'esc' key os pressed to close the game
 function love.keypressed(key)
@@ -49,6 +52,8 @@ function love.draw()
 	--	push virtualization initialized
 	push:apply('start')
 	
+	love.graphics.setFont(smallfont)
+
 	--	draw the background in gray
 	love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
 
@@ -68,6 +73,9 @@ function love.draw()
 						 VIRTUAL_WIDTH,				--	number of pixels to center within
 						 'center')					--	alignment 
 
+	--	print the score
+	love.graphics.setFont(scorefont)
+	--love.graphics.print("")
 	--	push virtualization must switch to end state
 	 push:apply('end')
 end

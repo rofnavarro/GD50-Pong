@@ -31,6 +31,8 @@ PADDLE_SPEED = 200
 ]]
 function love.load()
 	
+	--	
+	math.randomseed(os.time())
 	--	setting filter to point blank, to take out the blurry from virtualization
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	
@@ -53,6 +55,17 @@ function love.load()
 	--	setting the start position of each player
 	player1Y = 20
 	player2Y = VIRTUAL_HEIGHT - 40
+
+	--	setting the start position of the ball
+	ballX = VIRTUAL_WIDTH / 2 - 2
+	ballY = VIRTUAL_HEIGHT / 2 - 2
+
+	--	setting the speed of the ball
+	ballDX = math.random(2) == 1 and -100 or 100
+	ballDY = math.random(-50, 50)
+	
+	--	setting the game in 'start' mode
+	gamestate = 'start'
 end
 --[[
 	Runs every frame
@@ -77,6 +90,12 @@ function love.update(dt)
 		--	math.min set up the min range of the paddle so it wont get of the screen
 		player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
 	end
+
+	-- moves the ball if the game starts
+	if gamestate == 'play' then
+		ballX = ballX + ballDX * dt
+		ballY = ballY + ballDY * dt
+	end
 end
 
 --[[
@@ -85,14 +104,29 @@ end
 ]]
 function love.keypressed(key)
 
-	--	function to verify if the 'esc' key os pressed to close the game
+	--	condition to verify if the 'esc' key is pressed to close the game
 	if key =='escape' then
 		--	end the game if the event occurs
 		love.event.quit()
+	--	condition to change the gamestate if 'enter' is pressed
+	elseif key == 'enter' or key == 'return' then
+		if gamestate == 'start' then
+			gamestate = 'play'
+		elseif gamestate == 'play' then
+			gamestate = 'start'
+			--	setting the start position of the ball
+			ballX = VIRTUAL_WIDTH / 2 - 2
+			ballY = VIRTUAL_HEIGHT / 2 - 2
+			--	setting the speed of the ball
+			ballDX = math.random(2) == 1 and -100 or 100
+			ballDY = math.random(-50, 50)
+		end
 	end
 end
 
---	function that deals with all the drawing 
+--[[
+	Called after update, used to draw anything in the screen
+]]
 function love.draw()
 
 	--	push virtualization initialized
@@ -105,7 +139,7 @@ function love.draw()
 	love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
 
 	--	draw the ball
-	love.graphics.rectangle('fill', VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
+	love.graphics.rectangle('fill', ballX, ballY, 4, 4)
 	
 	--	draw the paddle 1
 	love.graphics.rectangle('fill', 5, player1Y, 5, 20)

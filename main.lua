@@ -135,7 +135,7 @@ function love.draw()
 	--	set up the base font of the game
 	love.graphics.setFont(smallfont)
 
-	--	draw the background in gray
+	--	draw the background in colour gray
 	love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
 
 	--	draw the ball
@@ -148,7 +148,11 @@ function love.draw()
 	love.graphics.rectangle('fill', VIRTUAL_WIDTH - 10, player2Y, 5, 20)
 
 	--	print to screen
-	love.graphics.printf("Hello Pong!", 0, 20, VIRTUAL_WIDTH,'center')
+	if gamestate == 'start' then
+		love.graphics.printf("Hello Pong!", 0, 20, VIRTUAL_WIDTH,'center')
+	elseif gamestate == 'play' then
+		love.graphics.printf("Play Pong!", 0, 20, VIRTUAL_WIDTH,'center')
+	end
 
 	--	set up the score font and print the score
 	love.graphics.setFont(scorefont)

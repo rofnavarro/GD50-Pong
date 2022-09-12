@@ -51,6 +51,9 @@ function love.load()
 	
 	--	setting the current time to get a random number for our game	
 	math.randomseed(os.time())
+
+	--	setting the title of the screen
+	love.window.setTitle("Feno's Pong!")
 	
 	--	setting the base font of the game
 	smallfont = love.graphics.newFont('font.ttf', 8)
@@ -159,7 +162,16 @@ function love.draw()
 	
 	--	draw the ball
 	ball:render()
+
+	--	draw FPS rate on screen
+	displayFPS()
 	
 	--	push virtualization must switch to end state
 	 push:apply('end')
+end
+
+function displayFPS()
+	love.graphics.setFont(smallfont)
+	love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 255 / 255)
+	love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 20, 10)
 end

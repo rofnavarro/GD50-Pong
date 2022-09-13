@@ -64,7 +64,7 @@ function love.load()
 	--	setting the virtualization of the window, to make it look like old SNES
 	push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
 		fullscreen = false,
-		resizable = true,
+		resizable = false,
 		vsync = true
 	})
 	
@@ -107,6 +107,23 @@ function love.update(dt)
 	if gamestate == 'play' then
 		ball:update(dt)
 	end
+
+	--	detect collision
+	if ball:collide(player1) then
+		ball.dx = -ball.dx * 1.2
+	end
+	if ball:collide(player2) then
+		ball.dx = -ball.dx * 1.2
+	end
+	if ball.y <= 0 then
+		ball.dy = -ball.dy
+		ball.y = 0
+	end
+	if ball.y >= VIRTUAL_HEIGHT - 4 then
+		ball.dy = -ball.dy
+		ball.y = VIRTUAL_HEIGHT - 4
+	end
+
 
 	-- players update based on dt
 	player1:update(dt)

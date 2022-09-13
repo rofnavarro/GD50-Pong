@@ -22,6 +22,20 @@ function Ball:reset()
 	self.dy = math.random(-50, 50)
 end
 
+--	used to verify if the ball collides with the paddles
+function Ball:collide(box)
+	--	if does not collides with the horizontal axis
+	if self.x > box.x + box.width or box.x > self.x + self.width then
+		return false
+	end
+	--	if does not collides with the vertical axis
+	if self.y > box.y + box.height or box.y > self.y + self.height then
+		return false
+	end
+	--	if collides
+	return true
+end
+
 --	used to update the position of the pddle
 function Ball:update(dt)
 	self.x = self.x + self.dx * dt

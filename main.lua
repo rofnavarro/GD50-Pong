@@ -57,6 +57,7 @@ function love.load()
 	
 	--	setting the base font of the game
 	smallfont = love.graphics.newFont('font.ttf', 8)
+	scoreFont = love.graphics.newFont('font.ttf', 32)
 
 	--	setting the font to use
 	love.graphics.setFont(smallfont)
@@ -75,6 +76,10 @@ function love.load()
 	--	setting the start position of the ball
 	ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
+	--	setting the initial score on both players
+	player1score = 0
+	player2score = 0
+
 	--	setting the game in 'start' mode
 	gamestate = 'start'
 end
@@ -84,6 +89,18 @@ end
 	dt is for delta time
 ]]
 function love.update(dt)
+
+	--
+	if ball.x <= 0 then
+		player2score = player2score + 1
+		ball:reset()
+		gamestate = 'start'
+	end
+	if ball.x >= VIRTUAL_WIDTH - 4 then
+		player1score = player1score + 1
+		ball:reset()
+		gamestate = 'start'
+	end
 
 	--	uses the input of the user to update the vertical position of the player1
 	if love.keyboard.isDown('w') then
@@ -108,13 +125,15 @@ function love.update(dt)
 		ball:update(dt)
 	end
 
-	--	detect collision
+	--	detect collision on paddles
 	if ball:collide(player1) then
 		ball.dx = -ball.dx * 1.2
 	end
 	if ball:collide(player2) then
 		ball.dx = -ball.dx * 1.2
 	end
+
+	--	detect if the balls go offscreen on top or bottom
 	if ball.y <= 0 then
 		ball.dy = -ball.dy
 		ball.y = 0
@@ -166,12 +185,9 @@ function love.draw()
 	--	set up the base font of the game
 	love.graphics.setFont(smallfont)
 
-	--	print to screen
-	if gamestate == 'start' then
-		love.graphics.printf("Hello Pong!", 0, 20, VIRTUAL_WIDTH,'center')
-	else
-		love.graphics.printf("Play Pong!", 0, 20, VIRTUAL_WIDTH,'center')
-	end
+	love.graphics.setFont(scoreFont)
+	love.graphics.print(tostring(player1score), VIRTUAL_WIDTH / 2 - 30, VIRTUAL_HEIGHT / 3)
+	love.graphics.print(tostring(player2score), VIRTUAL_WIDTH / 2 + 14, VIRTUAL_HEIGHT / 3)
 	
 	--	draw the paddles 
 	player1:render()

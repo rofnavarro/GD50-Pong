@@ -80,6 +80,16 @@ function love.load()
 	player1score = 0
 	player2score = 0
 
+	--	setting the initial player to random
+	servingPlayer = math.random(2) == 1 and 1 or 2
+
+	--	setting the side of the ball based on the initial player
+	if servingPlayer == 1 then
+		ball.dx = 100
+	else
+		ball.dx = -100
+	end
+
 	--	setting the game in 'start' mode
 	gamestate = 'start'
 end
@@ -90,16 +100,21 @@ end
 ]]
 function love.update(dt)
 
-	--
-	if ball.x <= 0 then
+	--	keeps the track of the score
+	--	send the ball to the opposite direction of the player who scored
+	if ball.x < 0 then
 		player2score = player2score + 1
+		servingPlayer = 1
 		ball:reset()
-		gamestate = 'start'
+		ball.dx = 100
+		gamestate = 'serve'
 	end
-	if ball.x >= VIRTUAL_WIDTH - 4 then
+	if ball.x > VIRTUAL_WIDTH - 4 then
 		player1score = player1score + 1
+		servingPlayer = 2
 		ball:reset()
-		gamestate = 'start'
+		ball.dx = -100
+		gamestate = 'serve'
 	end
 
 	--	uses the input of the user to update the vertical position of the player1
@@ -162,11 +177,9 @@ function love.keypressed(key)
 	--	condition to change the gamestate if 'enter' is pressed
 	elseif key == 'enter' or key == 'return' then
 		if gamestate == 'start' then
+			gamestate = 'serve'
+		elseif gamestate == 'serve' then
 			gamestate = 'play'
-		elseif gamestate == 'play' then
-			gamestate = 'start'
-			--	setting the start position of the ball
-			ball:reset()
 		end
 	end
 end
@@ -185,9 +198,21 @@ function love.draw()
 	--	set up the base font of the game
 	love.graphics.setFont(smallfont)
 
+	--	draw the message of each state of the game
+	if gamestate == 'start' then
+		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press Enter to Play!", 0, 32, VIRTUAL_WIDTH, 'center')
+	elseif gamestate == 'serve' then
+		love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s turn!", 0, 20, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press Enter to Serve!", 0, 32, VIRTUAL_WIDTH, 'center')
+	end
+
+	--	set up the font for the score of the game
 	love.graphics.setFont(scoreFont)
-	love.graphics.print(tostring(player1score), VIRTUAL_WIDTH / 2 - 30, VIRTUAL_HEIGHT / 3)
-	love.graphics.print(tostring(player2score), VIRTUAL_WIDTH / 2 + 14, VIRTUAL_HEIGHT / 3)
+
+	--	draw the score of the game
+	love.graphics.print(tostring(player1score), VIRTUAL_WIDTH / 2 - 30, VIRTUAL_HEIGHT - 40)
+	love.graphics.print(tostring(player2score), VIRTUAL_WIDTH / 2 + 14, VIRTUAL_HEIGHT - 40)
 	
 	--	draw the paddles 
 	player1:render()
@@ -203,6 +228,9 @@ function love.draw()
 	 push:apply('end')
 end
 
+--[[
+	Function to show the FPS on screen
+]]
 function displayFPS()
 	love.graphics.setFont(smallfont)
 	love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 255 / 255)

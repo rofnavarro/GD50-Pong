@@ -53,11 +53,12 @@ function love.load()
 	math.randomseed(os.time())
 
 	--	setting the title of the screen
-	love.window.setTitle("Feno's Pong!")
+	love.window.setTitle("Super Pong!")
 	
-	--	setting the base font of the game
+	--	setting the fonts of the game
 	smallfont = love.graphics.newFont('font.ttf', 8)
 	scoreFont = love.graphics.newFont('font.ttf', 32)
+	victoryFont = love.graphics.newFont('font.ttf', 24)
 
 	--	setting the font to use
 	love.graphics.setFont(smallfont)
@@ -80,14 +81,17 @@ function love.load()
 	player1score = 0
 	player2score = 0
 
+	-- setting up the track of the winner player
+	winner = 0
+
 	--	setting the initial player to random
 	servingPlayer = math.random(2) == 1 and 1 or 2
 
 	--	setting the side of the ball based on the initial player
 	if servingPlayer == 1 then
-		ball.dx = 100
+		ball.dx = 150
 	else
-		ball.dx = -100
+		ball.dx = -150
 	end
 
 	--	setting the game in 'start' mode
@@ -106,15 +110,29 @@ function love.update(dt)
 		player2score = player2score + 1
 		servingPlayer = 1
 		ball:reset()
-		ball.dx = 100
-		gamestate = 'serve'
+		ball.dx = 150
+		--	conditional to know if player 2 won
+		if player2score >= 3 then
+			gamestate = 'victory'
+			winner = 2
+			ball:reset()
+		else
+			gamestate = 'serve'
+		end
 	end
 	if ball.x > VIRTUAL_WIDTH - 4 then
 		player1score = player1score + 1
 		servingPlayer = 2
 		ball:reset()
-		ball.dx = -100
-		gamestate = 'serve'
+		ball.dx = -150
+		--	conditional to know if player 1 won
+		if player1score >= 3 then
+			gamestate = 'victory'
+			winner = 1
+			ball:reset()
+		else
+			gamestate = 'serve'
+		end
 	end
 
 	--	uses the input of the user to update the vertical position of the player1
@@ -180,6 +198,11 @@ function love.keypressed(key)
 			gamestate = 'serve'
 		elseif gamestate == 'serve' then
 			gamestate = 'play'
+		elseif gamestate == 'victory' then
+			player1score = 0
+			player2score = 0
+			winner = 0
+			gamestate = 'start'
 		end
 	end
 end
@@ -201,10 +224,15 @@ function love.draw()
 	--	draw the message of each state of the game
 	if gamestate == 'start' then
 		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.printf("Press Enter to Play!", 0, 32, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press Enter to play!", 0, 32, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'serve' then
 		love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s turn!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.printf("Press Enter to Serve!", 0, 32, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press Enter to serve!", 0, 32, VIRTUAL_WIDTH, 'center')
+	elseif gamestate == 'victory' then
+		love.graphics.setFont(victoryFont)
+		love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
+		love.graphics.setFont(smallfont)
+		love.graphics.printf("Press Enter to serve!", 0, 52, VIRTUAL_WIDTH, 'center')
 	end
 
 	--	set up the font for the score of the game

@@ -69,12 +69,19 @@ function love.load()
 		resizable = false,
 		vsync = true
 	})
+
+	--	creating the table of sounds for the game
+	sounds = {
+		['hit_paddle'] = love.audio.newSource('hit_paddle.wav', 'static'),
+		['hit_wall'] = love.audio.newSource('hit_wall.wav', 'static'),
+		['point_scored'] = love.audio.newSource('point_scored.wav', 'static')
+	}
 	
 	--	creating the objects paddle for both players
 	player1 = Paddle(5, 30, 5, 20)
 	player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
 
-	--	setting the start position of the ball
+	--	creating the object ball
 	ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
 	--	setting the initial score on both players
@@ -111,6 +118,9 @@ function love.update(dt)
 		servingPlayer = 1
 		ball:reset()
 		ball.dx = 150
+		
+		sounds['point_scored']:play()
+		
 		--	conditional to know if player 2 won
 		if player2score >= 3 then
 			gamestate = 'victory'
@@ -125,6 +135,9 @@ function love.update(dt)
 		servingPlayer = 2
 		ball:reset()
 		ball.dx = -150
+
+		sounds['point_scored']:play()
+
 		--	conditional to know if player 1 won
 		if player1score >= 3 then
 			gamestate = 'victory'
@@ -161,19 +174,27 @@ function love.update(dt)
 	--	detect collision on paddles
 	if ball:collide(player1) then
 		ball.dx = -ball.dx * 1.2
+		
+		sounds['hit_paddle']:play()
 	end
 	if ball:collide(player2) then
 		ball.dx = -ball.dx * 1.2
+
+		sounds['hit_paddle']:play()
 	end
 
 	--	detect if the balls go offscreen on top or bottom
 	if ball.y <= 0 then
 		ball.dy = -ball.dy
 		ball.y = 0
+
+		sounds['hit_wall']:play()
 	end
 	if ball.y >= VIRTUAL_HEIGHT - 4 then
 		ball.dy = -ball.dy
 		ball.y = VIRTUAL_HEIGHT - 4
+
+		sounds['hit_wall']:play()
 	end
 
 
@@ -232,14 +253,15 @@ function love.draw()
 		love.graphics.setFont(victoryFont)
 		love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
 		love.graphics.setFont(smallfont)
-		love.graphics.printf("Press Enter to serve!", 0, 52, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press Enter to play!", 0, 52, VIRTUAL_WIDTH, 'center')
 	end
-
-	--	set up the font for the score of the game
-	love.graphics.setFont(scoreFont)
-
+	
 	--	draw the score of the game
+	love.graphics.setFont(scoreFont)
 	love.graphics.print(tostring(player1score), VIRTUAL_WIDTH / 2 - 30, VIRTUAL_HEIGHT - 40)
+	love.graphics.setFont(smallfont)
+	love.graphics.print('x', VIRTUAL_WIDTH / 2 - 1.5, VIRTUAL_HEIGHT - 25)
+	love.graphics.setFont(scoreFont)
 	love.graphics.print(tostring(player2score), VIRTUAL_WIDTH / 2 + 14, VIRTUAL_HEIGHT - 40)
 	
 	--	draw the paddles 

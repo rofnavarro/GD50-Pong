@@ -173,12 +173,12 @@ function love.update(dt)
 
 	--	detect collision on paddles
 	if ball:collide(player1) then
-		ball.dx = -ball.dx * 1.2
+		ball.dx = -ball.dx * 1.1
 		
 		sounds['hit_paddle']:play()
 	end
 	if ball:collide(player2) then
-		ball.dx = -ball.dx * 1.2
+		ball.dx = -ball.dx * 1.1
 
 		sounds['hit_paddle']:play()
 	end
@@ -243,26 +243,10 @@ function love.draw()
 	love.graphics.setFont(smallfont)
 
 	--	draw the message of each state of the game
-	if gamestate == 'start' then
-		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.printf("Press Enter to play!", 0, 32, VIRTUAL_WIDTH, 'center')
-	elseif gamestate == 'serve' then
-		love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s turn!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.printf("Press Enter to serve!", 0, 32, VIRTUAL_WIDTH, 'center')
-	elseif gamestate == 'victory' then
-		love.graphics.setFont(victoryFont)
-		love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.setFont(smallfont)
-		love.graphics.printf("Press Enter to play!", 0, 52, VIRTUAL_WIDTH, 'center')
-	end
+	messageState()
 	
 	--	draw the score of the game
-	love.graphics.setFont(scoreFont)
-	love.graphics.print(tostring(player1score), VIRTUAL_WIDTH / 2 - 30, VIRTUAL_HEIGHT - 40)
-	love.graphics.setFont(smallfont)
-	love.graphics.print('x', VIRTUAL_WIDTH / 2 - 1.5, VIRTUAL_HEIGHT - 25)
-	love.graphics.setFont(scoreFont)
-	love.graphics.print(tostring(player2score), VIRTUAL_WIDTH / 2 + 14, VIRTUAL_HEIGHT - 40)
+	drawScore()
 	
 	--	draw the paddles 
 	player1:render()
@@ -279,10 +263,40 @@ function love.draw()
 end
 
 --[[
-	Function to show the FPS on screen
+	Function to draw the score on screen
+]]
+function drawScore()
+	love.graphics.setFont(scoreFont)
+	love.graphics.print(tostring(player1score), VIRTUAL_WIDTH / 2 - 28, VIRTUAL_HEIGHT - 40)
+	love.graphics.setFont(smallfont)
+	love.graphics.print('X', VIRTUAL_WIDTH / 2 - 1.5, VIRTUAL_HEIGHT - 25)
+	love.graphics.setFont(scoreFont)
+	love.graphics.print(tostring(player2score), VIRTUAL_WIDTH / 2 + 14, VIRTUAL_HEIGHT - 40)
+end
+
+--[[
+	Function to draw the FPS on screen
 ]]
 function displayFPS()
 	love.graphics.setFont(smallfont)
 	love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 255 / 255)
 	love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 20, 10)
+end
+
+--[[
+	Functrion to draw the message for each state of the game
+]]
+function messageState()
+	if gamestate == 'start' then
+		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press Enter to play!", 0, 32, VIRTUAL_WIDTH, 'center')
+	elseif gamestate == 'serve' then
+		love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s turn!", 0, 20, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press Enter to serve!", 0, 32, VIRTUAL_WIDTH, 'center')
+	elseif gamestate == 'victory' then
+		love.graphics.setFont(victoryFont)
+		love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
+		love.graphics.setFont(smallfont)
+		love.graphics.printf("Press Enter to play!", 0, 52, VIRTUAL_WIDTH, 'center')
+	end
 end

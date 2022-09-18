@@ -56,26 +56,17 @@ function love.load()
 	love.window.setTitle("Super Pong!")
 	
 	--	setting the fonts of the game
-	smallfont = love.graphics.newFont('font.ttf', 8)
-	scoreFont = love.graphics.newFont('font.ttf', 32)
-	victoryFont = love.graphics.newFont('font.ttf', 24)
-
-	--	setting the font to use
-	love.graphics.setFont(smallfont)
+	createFont()
 	
 	--	setting the virtualization of the window, to make it look like old SNES
 	push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
 		fullscreen = false,
-		resizable = false,
+		resizable = true,
 		vsync = true
 	})
 
 	--	creating the table of sounds for the game
-	sounds = {
-		['hit_paddle'] = love.audio.newSource('hit_paddle.wav', 'static'),
-		['hit_wall'] = love.audio.newSource('hit_wall.wav', 'static'),
-		['point_scored'] = love.audio.newSource('point_scored.wav', 'static')
-	}
+	createSounds()
 	
 	--	creating the objects paddle for both players
 	player1 = Paddle(5, 30, 5, 20)
@@ -111,60 +102,11 @@ end
 ]]
 function love.update(dt)
 
-	--	keeps the track of the score
-	--	send the ball to the opposite direction of the player who scored
-	if ball.x < 0 then
-		player2score = player2score + 1
-		servingPlayer = 1
-		ball:reset()
-		ball.dx = 150
-		
-		sounds['point_scored']:play()
-		
-		--	conditional to know if player 2 won
-		if player2score >= 3 then
-			gamestate = 'victory'
-			winner = 2
-			ball:reset()
-		else
-			gamestate = 'serve'
-		end
-	end
-	if ball.x > VIRTUAL_WIDTH - 4 then
-		player1score = player1score + 1
-		servingPlayer = 2
-		ball:reset()
-		ball.dx = -150
-
-		sounds['point_scored']:play()
-
-		--	conditional to know if player 1 won
-		if player1score >= 3 then
-			gamestate = 'victory'
-			winner = 1
-			ball:reset()
-		else
-			gamestate = 'serve'
-		end
-	end
-
-	--	uses the input of the user to update the vertical position of the player1
-	if love.keyboard.isDown('w') then
-		player1.dy = -PADDLE_SPEED
-	elseif love.keyboard.isDown('s') then
-		player1.dy = PADDLE_SPEED
-	else
-		player1.dy = 0
-	end
-
-	--	uses the input of the user to update the vertical position of the player2
-	if love.keyboard.isDown('up') then
-		player2.dy = -PADDLE_SPEED
-	elseif love.keyboard.isDown('down') then
-		player2.dy = PADDLE_SPEED
-	else
-		player2.dy = 0
-	end
+	--	tracks the score of the game and resets the ball to serve
+	score_point()
+	
+	--	uses the input of the user to move the paddles
+	move_paddle()
 
 	-- moves the ball if the game starts
 	if gamestate == 'play' then
@@ -284,7 +226,7 @@ function displayFPS()
 end
 
 --[[
-	Functrion to draw the message for each state of the game
+	Function to draw the message for each state of the game
 ]]
 function messageState()
 	if gamestate == 'start' then
@@ -298,5 +240,96 @@ function messageState()
 		love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
 		love.graphics.setFont(smallfont)
 		love.graphics.printf("Press Enter to play!", 0, 52, VIRTUAL_WIDTH, 'center')
+	end
+end
+
+--[[
+	Function to create the font objects used on game
+]]
+function createFont()
+	smallfont = love.graphics.newFont('font.ttf', 8)
+	scoreFont = love.graphics.newFont('font.ttf', 32)
+	victoryFont = love.graphics.newFont('font.ttf', 24)
+end
+
+--[[
+	Function to create a table of sounds for the game
+]]
+function createSounds()
+	sounds = {
+		['hit_paddle'] = love.audio.newSource('hit_paddle.wav', 'static'),
+		['hit_wall'] = love.audio.newSource('hit_wall.wav', 'static'),
+		['point_scored'] = love.audio.newSource('point_scored.wav', 'static')
+	}
+end
+
+--[[
+	Function to resize the window of the game with push library
+]]
+function love.resize(w, h)
+	push:resize(w, h)
+end
+
+--[[
+	Function to keep track of the score and send the ball 
+	to the opposite direction of the player who scored
+]]	
+function score_point()
+	if ball.x < 0 then
+		player2score = player2score + 1
+		servingPlayer = 1
+		ball:reset()
+		ball.dx = 150
+		
+		sounds['point_scored']:play()
+		
+		--	conditional to know if player 2 won
+		if player2score >= 3 then
+			gamestate = 'victory'
+			winner = 2
+			ball:reset()
+		else
+			gamestate = 'serve'
+		end
+	end
+	if ball.x > VIRTUAL_WIDTH - 4 then
+		player1score = player1score + 1
+		servingPlayer = 2
+		ball:reset()
+		ball.dx = -150
+
+		sounds['point_scored']:play()
+
+		--	conditional to know if player 1 won
+		if player1score >= 3 then
+			gamestate = 'victory'
+			winner = 1
+			ball:reset()
+		else
+			gamestate = 'serve'
+		end
+	end
+end
+
+--[[
+	Function used to move the paddles based on user's keyboard input
+]]
+function move_paddle()
+	--	uses the input of the user to update the vertical position of the player1
+	if love.keyboard.isDown('w') then
+		player1.dy = -PADDLE_SPEED
+	elseif love.keyboard.isDown('s') then
+		player1.dy = PADDLE_SPEED
+	else
+		player1.dy = 0
+	end
+
+	--	uses the input of the user to update the vertical position of the player2
+	if love.keyboard.isDown('up') then
+		player2.dy = -PADDLE_SPEED
+	elseif love.keyboard.isDown('down') then
+		player2.dy = PADDLE_SPEED
+	else
+		player2.dy = 0
 	end
 end

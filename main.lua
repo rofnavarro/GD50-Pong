@@ -79,7 +79,10 @@ function love.load()
 	player1score = 0
 	player2score = 0
 
-	-- setting up the track of the winner player
+	--	setting the number of AI players
+	numberofPlayers = 0
+
+	-- 	etting up the track of the winner player
 	winner = 0
 
 	--	setting the initial player to random
@@ -93,7 +96,7 @@ function love.load()
 	end
 
 	--	setting the game in 'start' mode
-	gamestate = 'start'
+	gamestate = 'prep'
 end
 
 --[[
@@ -139,7 +142,6 @@ function love.update(dt)
 		sounds['hit_wall']:play()
 	end
 
-
 	-- players update based on dt
 	player1:update(dt)
 	player2:update(dt)
@@ -152,9 +154,19 @@ end
 function love.keypressed(key)
 
 	--	condition to verify if the 'esc' key is pressed to close the game
-	if key =='escape' then
+	if key == 'escape' then
 		--	end the game if the event occurs
 		love.event.quit()
+	elseif key == '1' then
+		if gamestate == 'prep' then
+			numberofPlayers = 1
+			gamestate = 'start'
+		end
+	elseif key == '2' then
+		if gamestate == 'prep' then
+			numberofPlayers = 2
+			gamestate = 'start'
+		end
 	--	condition to change the gamestate if 'enter' is pressed
 	elseif key == 'enter' or key == 'return' then
 		if gamestate == 'start' then
@@ -229,7 +241,10 @@ end
 	Function to draw the message for each state of the game
 ]]
 function messageState()
-	if gamestate == 'start' then
+	if gamestate == 'prep' then
+		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Enter the number of players! (one or two)", 0, 32, VIRTUAL_WIDTH, 'center')
+	elseif gamestate == 'start' then
 		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
 		love.graphics.printf("Press Enter to play!", 0, 32, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'serve' then

@@ -158,7 +158,7 @@ function love.update(dt)
 		player2:update(dt)
 	elseif numberofPlayers == 1 then
 		player1:update(dt)
-		machine:update(dt, ball.y - 8)
+		machine:update(dt, ball.y - 12)
 	end
 end
 

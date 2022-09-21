@@ -24,6 +24,7 @@ Class = require 'class'
 --	calling the classes 
 require 'Paddle'
 require 'Ball'
+require 'Ai'
 
 --[[
 	Global Variables
@@ -71,6 +72,7 @@ function love.load()
 	--	creating the objects paddle for both players
 	player1 = Paddle(5, 30, 5, 20)
 	player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
+	machine = Ai(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
 
 	--	creating the object ball
 	ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
@@ -122,10 +124,18 @@ function love.update(dt)
 		
 		sounds['hit_paddle']:play()
 	end
-	if ball:collide(player2) then
-		ball.dx = -ball.dx * 1.1
+	if numberofPlayers == 2 then
+		if ball:collide(player2) then
+			ball.dx = -ball.dx * 1.1
 
-		sounds['hit_paddle']:play()
+			sounds['hit_paddle']:play()
+		end
+	elseif numberofPlayers == 1 then
+		if ball:collide(machine) then
+			ball.dx = -ball.dx * 1.1
+		
+			sounds['hit_paddle']:play()
+		end 
 	end
 
 	--	detect if the balls go offscreen on top or bottom
@@ -143,8 +153,13 @@ function love.update(dt)
 	end
 
 	-- players update based on dt
-	player1:update(dt)
-	player2:update(dt)
+	if numberofPlayers == 2 then
+		player1:update(dt)
+		player2:update(dt)
+	elseif numberofPlayers == 1 then
+		player1:update(dt)
+		machine:update(dt, ball.y - 8)
+	end
 end
 
 --[[
@@ -202,10 +217,14 @@ function love.draw()
 	--	draw the score of the game
 	drawScore()
 	
-	--	draw the paddles 
-	player1:render()
-	player2:render()
-	
+	--	draw the paddles
+	if numberofPlayers == 2 then
+		player1:render()
+		player2:render()
+	elseif numberofPlayers == 1 then
+		player1:render()
+		machine:render()
+	end
 	--	draw the ball
 	ball:render()
 
@@ -330,21 +349,31 @@ end
 	Function used to move the paddles based on user's keyboard input
 ]]
 function move_paddle()
+	if numberofPlayers == 2 then
 	--	uses the input of the user to update the vertical position of the player1
-	if love.keyboard.isDown('w') then
-		player1.dy = -PADDLE_SPEED
-	elseif love.keyboard.isDown('s') then
-		player1.dy = PADDLE_SPEED
-	else
-		player1.dy = 0
-	end
+		if love.keyboard.isDown('w') then
+			player1.dy = -PADDLE_SPEED
+		elseif love.keyboard.isDown('s') then
+			player1.dy = PADDLE_SPEED
+		else
+			player1.dy = 0
+		end
 
-	--	uses the input of the user to update the vertical position of the player2
-	if love.keyboard.isDown('up') then
-		player2.dy = -PADDLE_SPEED
-	elseif love.keyboard.isDown('down') then
-		player2.dy = PADDLE_SPEED
-	else
-		player2.dy = 0
+		--	uses the input of the user to update the vertical position of the player2
+		if love.keyboard.isDown('up') then
+			player2.dy = -PADDLE_SPEED
+		elseif love.keyboard.isDown('down') then
+			player2.dy = PADDLE_SPEED
+		else
+			player2.dy = 0
+		end
+	elseif numberofPlayers == 1 then
+		if love.keyboard.isDown('w') then
+			player1.dy = -PADDLE_SPEED
+		elseif love.keyboard.isDown('s') then
+			player1.dy = PADDLE_SPEED
+		else
+			player1.dy = 0
+		end
 	end
 end

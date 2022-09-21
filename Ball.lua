@@ -8,8 +8,8 @@ function Ball:init(x, y, width, height)
 	self.height = height
 
 	--	setting the speed of the ball
-	self.dx = math.random(2) == 1 and -150 or 150
-	self.dy = math.random(-50, 50)
+	self.dy = math.random(2) == 1 and -150 or 150
+	self.dx = math.random(-50, 50)
 end
 
 --	used to rest the position of the ball to the middle

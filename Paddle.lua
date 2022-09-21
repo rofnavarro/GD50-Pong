@@ -10,7 +10,7 @@ function Paddle:init(x, y, width, height)
 	self.dy = 0
 end
 
---	used to update the position of the pddle
+--	used to update the position of the paddle
 function Paddle:update(dt)
 	if self.dy < 0 then
 		--	to not get off screen on botton

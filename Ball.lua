@@ -18,7 +18,7 @@ function Ball:reset()
 	self.y = VIRTUAL_HEIGHT / 2 - 2
 	
 	--	setting the speed of the ball
-	self.dy = math.random(-75, 75)
+	self.dx = math.random(-75, 75)
 end
 
 --	used to verify if the ball collides with the paddles

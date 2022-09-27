@@ -12,12 +12,12 @@ function Ball:init(x, y, width, height)
 	self.dx = math.random(-50, 50)
 end
 
---	used to rest the position of the ball to the middle
+--	used to rest the position of the object to the middle
 function Ball:reset()
 	self.x = VIRTUAL_WIDTH / 2 - 2
 	self.y = VIRTUAL_HEIGHT / 2 - 2
 	
-	--	setting the speed of the ball
+	--	setting the speed of the object
 	self.dx = math.random(-75, 75)
 end
 
@@ -35,7 +35,7 @@ function Ball:collide(box)
 	return true
 end
 
---	used to update the position of the pddle
+--	used to update the position of the object
 function Ball:update(dt)
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt

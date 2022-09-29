@@ -24,7 +24,6 @@ Class = require 'class'
 --	calling the classes 
 require 'Paddle'
 require 'Ball'
-require 'Ai'
 
 --[[
 	Global Variables
@@ -72,7 +71,7 @@ function love.load()
 	--	creating the objects paddle for both players
 	player1 = Paddle(5, 30, 5, 20)
 	player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
-	machine = Ai(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
+	machine = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
 
 	--	creating the object ball
 	ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
@@ -261,19 +260,20 @@ end
 ]]
 function messageState()
 	if gamestate == 'prep' then
+		love.graphics.setFont(victoryFont)
 		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.printf("Enter the number of players! (one or two)", 0, 32, VIRTUAL_WIDTH, 'center')
+		love.graphics.setFont(smallfont)
+		love.graphics.printf("Enter the number of players! (1 or 2)", 0, 50, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'start' then
-		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.printf("Press Enter to play!", 0, 32, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press ENTER to play!", 0, 32, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'serve' then
 		love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s turn!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.printf("Press Enter to serve!", 0, 32, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press ENTER to serve!", 0, 32, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'victory' then
 		love.graphics.setFont(victoryFont)
 		love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
 		love.graphics.setFont(smallfont)
-		love.graphics.printf("Press Enter to play!", 0, 52, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Press ENTER to play!", 0, 52, VIRTUAL_WIDTH, 'center')
 	end
 end
 
@@ -375,5 +375,6 @@ function move_paddle()
 		else
 			player1.dy = 0
 		end
+		machine.y = ball.y - 4
 	end
 end

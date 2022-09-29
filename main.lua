@@ -270,10 +270,24 @@ function messageState()
 		love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s turn!", 0, 20, VIRTUAL_WIDTH, 'center')
 		love.graphics.printf("Press ENTER to serve!", 0, 32, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'victory' then
-		love.graphics.setFont(victoryFont)
-		love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
-		love.graphics.setFont(smallfont)
-		love.graphics.printf("Press ENTER to play!", 0, 52, VIRTUAL_WIDTH, 'center')
+		if numberofPlayers == 2 then
+			love.graphics.setFont(victoryFont)
+			love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
+			love.graphics.setFont(smallfont)
+			love.graphics.printf("Press ENTER to play!", 0, 52, VIRTUAL_WIDTH, 'center')
+		elseif numberofPlayers == 1 then
+			if winner == 1 then
+				love.graphics.setFont(victoryFont)
+				love.graphics.printf("Player " .. tostring(winner) .. " wins!", 0, 20, VIRTUAL_WIDTH, 'center')
+				love.graphics.setFont(smallfont)
+				love.graphics.printf("Press ENTER to play!", 0, 52, VIRTUAL_WIDTH, 'center')
+			else
+				love.graphics.setFont(victoryFont)
+				love.graphics.printf("Machine wins!", 0, 20, VIRTUAL_WIDTH, 'center')
+				love.graphics.setFont(smallfont)
+				love.graphics.printf("Press ENTER to play!", 0, 52, VIRTUAL_WIDTH, 'center')
+			end
+		end
 	end
 end
 

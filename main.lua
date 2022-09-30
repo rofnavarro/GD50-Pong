@@ -91,9 +91,9 @@ function love.load()
 
 	--	setting the side of the ball based on the initial player
 	if servingPlayer == 1 then
-		ball.dx = 150
+		ball.dx = 100
 	else
-		ball.dx = -150
+		ball.dx = -100
 	end
 
 	--	setting the game in 'start' mode
@@ -191,7 +191,7 @@ function love.keypressed(key)
 			player1score = 0
 			player2score = 0
 			winner = 0
-			gamestate = 'start'
+			gamestate = 'prep'
 		end
 	end
 end
@@ -217,6 +217,7 @@ function love.draw()
 	if gamestate ~= 'prep' then
 		--	draw the score of the game
 		drawScore()
+		--	draw the players
 		if numberofPlayers == 2 then
 			player1:render()
 			player2:render()

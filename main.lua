@@ -213,19 +213,21 @@ function love.draw()
 	--	draw the message of each state of the game
 	messageState()
 	
-	--	draw the score of the game
-	drawScore()
-	
 	--	draw the paddles
-	if numberofPlayers == 2 then
-		player1:render()
-		player2:render()
-	elseif numberofPlayers == 1 then
-		player1:render()
-		machine:render()
+	if gamestate ~= 'prep' then
+		--	draw the score of the game
+		drawScore()
+		if numberofPlayers == 2 then
+			player1:render()
+			player2:render()
+		elseif numberofPlayers == 1 then
+			player1:render()
+			machine:render()
+		end
+		--	draw the ball
+		ball:render()
 	end
-	--	draw the ball
-	ball:render()
+
 
 	--	draw FPS rate on screen
 	displayFPS()
@@ -261,9 +263,9 @@ end
 function messageState()
 	if gamestate == 'prep' then
 		love.graphics.setFont(victoryFont)
-		love.graphics.printf("Welcome to Super Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Welcome to Super Pong!", 0, VIRTUAL_HEIGHT / 2 - 30, VIRTUAL_WIDTH, 'center')
 		love.graphics.setFont(smallfont)
-		love.graphics.printf("Enter the number of players! (1 or 2)", 0, 50, VIRTUAL_WIDTH, 'center')
+		love.graphics.printf("Enter the number of players! (1 or 2)", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'start' then
 		love.graphics.printf("Press ENTER to play!", 0, 32, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'serve' then

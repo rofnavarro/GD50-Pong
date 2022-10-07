@@ -56,7 +56,7 @@ function love.load()
 	love.window.setTitle("Super Pong!")
 	
 	--	setting the fonts of the game
-	createFont()
+	initFonts()
 	
 	--	setting the virtualization of the window, to make it look like old SNES
 	push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -66,7 +66,7 @@ function love.load()
 	})
 
 	--	creating the table of sounds for the game
-	createSounds()
+	initSounds()
 	
 	--	creating the objects paddle for both players
 	player1 = Paddle(5, 30, 5, 20)
@@ -297,7 +297,7 @@ end
 --[[
 	Function to create the font objects used on game
 ]]
-function createFont()
+function initFonts()
 	smallfont = love.graphics.newFont('font.ttf', 8)
 	scoreFont = love.graphics.newFont('font.ttf', 32)
 	victoryFont = love.graphics.newFont('font.ttf', 24)
@@ -306,7 +306,7 @@ end
 --[[
 	Function to create a table of sounds for the game
 ]]
-function createSounds()
+function initSounds()
 	sounds = {
 		['hit_paddle'] = love.audio.newSource('hit_paddle.wav', 'static'),
 		['hit_wall'] = love.audio.newSource('hit_wall.wav', 'static'),

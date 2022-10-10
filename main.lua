@@ -36,6 +36,8 @@ VIRTUAL_HEIGHT = 243
 
 PADDLE_SPEED = 200
 
+local pause = false
+
 --[[
 	Game
 ]]
@@ -113,7 +115,7 @@ function love.update(dt)
 	move_paddle()
 
 	-- moves the ball if the game starts
-	if gamestate == 'play' then
+	if gamestate == 'play' and pause == false then
 		ball:update(dt)
 	end
 
@@ -152,10 +154,10 @@ function love.update(dt)
 	end
 
 	-- players update based on dt
-	if numberofPlayers == 2 then
+	if numberofPlayers == 2 and pause == false then
 		player1:update(dt)
 		player2:update(dt)
-	elseif numberofPlayers == 1 then
+	elseif numberofPlayers == 1 and pause == false then
 		player1:update(dt)
 		machine:update(dt, ball.y - 12)
 	end
@@ -171,6 +173,12 @@ function love.keypressed(key)
 	if key == 'escape' then
 		--	end the game if the event occurs
 		love.event.quit()
+	elseif key == 'p' then
+		if pause == false then
+			pause = true
+		elseif pause == true then
+			pause = false
+		end
 	elseif key == '1' then
 		if gamestate == 'prep' then
 			numberofPlayers = 1

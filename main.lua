@@ -179,6 +179,12 @@ function love.keypressed(key)
 		elseif pause == true then
 			pause = false
 		end
+	elseif key == 'h' then
+		if gamestate == 'prep' then
+			gamestate = 'help'
+		elseif gamestate == 'help' then
+			gamestate = 'prep'
+		end
 	elseif key == '1' then
 		if gamestate == 'prep' then
 			numberofPlayers = 1
@@ -223,18 +229,22 @@ function love.draw()
 	
 	--	draw the paddles
 	if gamestate ~= 'prep' then
-		--	draw the score of the game
-		drawScore()
-		--	draw the players
-		if numberofPlayers == 2 then
-			player1:render()
-			player2:render()
-		elseif numberofPlayers == 1 then
-			player1:render()
-			machine:render()
+		if gamestate ~= 'help' then
+			--	draw the score of the game
+			drawScore()
+			--	draw the players
+			if numberofPlayers == 2 then
+				player1:render()
+				player2:render()
+			elseif numberofPlayers == 1 then
+				player1:render()
+				machine:render()
+			end
+			--	draw the ball
+			ball:render()
+		else
+			help_menu()
 		end
-		--	draw the ball
-		ball:render()
 	end
 
 
@@ -275,6 +285,8 @@ function messageState()
 		love.graphics.printf("Welcome to Super Pong!", 0, VIRTUAL_HEIGHT / 2 - 30, VIRTUAL_WIDTH, 'center')
 		love.graphics.setFont(smallfont)
 		love.graphics.printf("Enter the number of players! (1 or 2)", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, 'center')
+		love.graphics.setFont(smallfont)
+		love.graphics.printf("Press 'H' to help menu", 10, VIRTUAL_HEIGHT - 15, VIRTUAL_WIDTH, 'left')
 	elseif gamestate == 'start' then
 		love.graphics.printf("Press ENTER to play!", 0, 32, VIRTUAL_WIDTH, 'center')
 	elseif gamestate == 'serve' then
@@ -402,4 +414,16 @@ function move_paddle()
 		end
 		machine.y = ball.y - 4
 	end
+end
+
+function help_menu()
+	love.graphics.setFont(victoryFont)
+	love.graphics.printf("Help Menu", 0, 20, VIRTUAL_WIDTH, 'center')
+	love.graphics.setFont(smallfont)
+	love.graphics.printf("Player 1 Controller:	W - move up", - 16, VIRTUAL_HEIGHT / 2 - 40, VIRTUAL_WIDTH, 'center')
+	love.graphics.printf("S - move down", 221, VIRTUAL_HEIGHT / 2 - 30, VIRTUAL_WIDTH, 'left')
+	love.graphics.printf("Player 2 Controller:	Up Arrow - move up", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, 'center')
+	love.graphics.printf("Down Arrow - move down", VIRTUAL_WIDTH / 2 + 6, VIRTUAL_HEIGHT / 2 + 10, VIRTUAL_WIDTH, 'left')
+	love.graphics.printf("Others:	P - pause game", 17, VIRTUAL_HEIGHT - 90, VIRTUAL_WIDTH, 'center')
+	love.graphics.printf("H - help menu", VIRTUAL_WIDTH / 2 + 6, VIRTUAL_HEIGHT - 80, VIRTUAL_WIDTH, 'left')
 end

@@ -424,6 +424,6 @@ function help_menu()
 	love.graphics.printf("S - move down", 221, VIRTUAL_HEIGHT / 2 - 30, VIRTUAL_WIDTH, 'left')
 	love.graphics.printf("Player 2 Controller:	Up Arrow - move up", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, 'center')
 	love.graphics.printf("Down Arrow - move down", VIRTUAL_WIDTH / 2 + 6, VIRTUAL_HEIGHT / 2 + 10, VIRTUAL_WIDTH, 'left')
-	love.graphics.printf("Others:	P - pause game", 17, VIRTUAL_HEIGHT - 90, VIRTUAL_WIDTH, 'center')
-	love.graphics.printf("H - help menu", VIRTUAL_WIDTH / 2 + 6, VIRTUAL_HEIGHT - 80, VIRTUAL_WIDTH, 'left')
+	love.graphics.printf("Others:	P - pause game", 17, VIRTUAL_HEIGHT - 80, VIRTUAL_WIDTH, 'center')
+	love.graphics.printf("H - help menu", VIRTUAL_WIDTH / 2 + 6, VIRTUAL_HEIGHT - 70, VIRTUAL_WIDTH, 'left')
 end
